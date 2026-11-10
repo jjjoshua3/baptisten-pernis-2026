@@ -45,7 +45,7 @@ export function StaffLogin({ title = "Beheer", magic = "" }: { title?: string; m
         <h1 className="mt-5 font-display text-3xl text-navy">{title}</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Vul het e-mailadres in dat de beheerder heeft toegevoegd. Je krijgt een link die dertig minuten
-          geldig is en één keer werkt. Af en toe vraagt het beheer daarna om een code uit je authenticator.
+          geldig is en één keer werkt.
         </p>
         {step ? (
           <form
