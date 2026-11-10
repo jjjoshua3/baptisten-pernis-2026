@@ -1,0 +1,12 @@
+.secrets/
+node_modules/
+.vercel/
+.netlify/
+dist/
+artifacts/
+screenshots/
+attachments/
+.tanstack/
+
+.grok/
+AGENTS.md
