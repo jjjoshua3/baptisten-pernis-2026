@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baptisten-pernis.netlify.app/sitemap.xml
