@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, readFileSync as readText } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import pg from "pg";
 import type { Sql } from "@/lib/db";
@@ -50,17 +50,22 @@ async function migratePernis(pool: pg.Pool) {
     const applied = new Set(
       (await client.query<{ name: string }>("select name from _migrations")).rows.map((row) => row.name),
     );
-    const dir = join(process.cwd(), "migrations");
-    const files = readdirSync(dir)
-      .filter((name) => name.endsWith(".sql") && name !== "0001_auth.sql")
-      .sort();
-    for (const name of files) {
-      if (applied.has(name)) continue;
-      const text = readText(join(dir, name), "utf8");
+    // Bundled with the function. The Netlify runtime has no migrations/ folder on disk.
+    const bundled = import.meta.glob("/migrations/*.sql", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }) as Record<string, string>;
+    const files = Object.keys(bundled)
+      .map((path) => ({ name: path.split("/").pop() ?? path, text: bundled[path] }))
+      .filter((file) => file.name.endsWith(".sql") && file.name !== "0001_auth.sql")
+      .sort((a, b) => a.name.localeCompare(b.name));
+    for (const file of files) {
+      if (applied.has(file.name)) continue;
       await client.query("begin");
       try {
-        await client.query(text);
-        await client.query("insert into _migrations (name) values ($1)", [name]);
+        await client.query(file.text);
+        await client.query("insert into _migrations (name) values ($1)", [file.name]);
         await client.query("commit");
       } catch (error) {
         await client.query("rollback");
