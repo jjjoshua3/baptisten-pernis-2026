@@ -15,7 +15,7 @@ export function BlocksPage({
         <h1 className="mt-3 font-display text-4xl text-navy sm:text-5xl">{page.title}</h1>
         {page.lede ? <p className="mt-5 text-lg text-muted">{page.lede}</p> : null}
         {image ? (
-          <img src={image.src} alt={image.alt} className="mt-8 aspect-[16/9] w-full rounded-3xl object-cover" />
+          <img src={image.src} alt={image.alt} width={1024} height={577} loading="lazy" className="mt-8 aspect-[16/9] w-full rounded-3xl object-cover" />
         ) : null}
         <div className="mt-10 space-y-6">
           {page.blocks.map((block) => (

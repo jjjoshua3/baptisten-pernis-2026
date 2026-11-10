@@ -15,9 +15,19 @@ export const Route = createRootRoute({
           "Baptistengemeente Pernis. Leven, groeien, dienen en delen. Elke zondag om 10:00 uur in De Heuvel, Ring 322, Pernis.",
       },
       { name: "theme-color", content: "#1e3a5f" },
+      { property: "og:title", content: "Baptistengemeente Pernis" },
+      {
+        property: "og:description",
+        content: "Elke zondag om 10:00 uur in Gemeentecentrum De Heuvel, Pernis. Je bent welkom.",
+      },
+      { property: "og:image", content: "https://baptistenpernis.netlify.app/og.jpg" },
+      { property: "og:type", content: "website" },
+      { property: "og:locale", content: "nl_NL" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
       { rel: "stylesheet", href: appCss },
       {
         rel: "stylesheet",

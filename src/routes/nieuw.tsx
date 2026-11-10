@@ -14,7 +14,7 @@ export const Route = createFileRoute("/nieuw")({
     return (
       <BlocksPage
         page={Route.useLoaderData()}
-        image={{ src: "/fotos/kaarsen.jpg", alt: "Kaarsen in de kerkzaal van Baptistengemeente Pernis" }}
+        image={{ src: "/fotos/kaarsen.webp", alt: "Kaarsen in de kerkzaal van Baptistengemeente Pernis" }}
       />
     );
   },

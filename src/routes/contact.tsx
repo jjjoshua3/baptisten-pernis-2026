@@ -36,10 +36,8 @@ function Contact() {
               </dd>
             </div>
             <div>
-              <dt className="font-semibold text-navy">E-mail</dt>
-              <dd className="mt-1">
-                <a className="text-gold-deep" href={`mailto:${settings.email}`}>{settings.email}</a>
-              </dd>
+              <dt className="font-semibold text-navy">Bericht</dt>
+              <dd className="mt-1">Gebruik het formulier. Het komt bij de gemeente binnen.</dd>
             </div>
             <div>
               <dt className="font-semibold text-navy">Dienst</dt>

@@ -37,7 +37,7 @@ export function StaffLogin({ title = "Beheer", magic = "" }: { title?: string; m
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <img src="/fotos/zaal.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <img src="/fotos/zaal.webp" alt="" width={1024} height={577} className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-br from-navy/80 via-navy/55 to-navy/75" />
       <div className="relative grid min-h-screen place-items-center px-5 py-16">
       <div className="w-full max-w-md rounded-3xl border border-white/30 bg-paper/95 p-8 shadow-2xl backdrop-blur-md">

@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 export function NotFound() {
   return (
     <main className="relative grid min-h-screen place-items-center overflow-hidden bg-navy px-6 py-16 text-paper">
-      <img src="/fotos/zaal.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+      <img src="/fotos/zaal.webp" alt="" width={1024} height={577} className="absolute inset-0 h-full w-full object-cover opacity-40" />
       <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/70 to-navy" />
       <div className="relative max-w-lg text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold">Baptistengemeente Pernis</p>

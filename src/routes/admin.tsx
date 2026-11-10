@@ -28,6 +28,7 @@ import {
   sendJoshuaFeedback,
   type Staff,
 } from "@/lib/church/admin";
+import { listVisits, type VisitStats } from "@/lib/church/visits";
 import {
   getActivities,
   getEvents,
@@ -145,6 +146,7 @@ function BeheerApp() {
     { id: "berichten", label: "Berichten", show: staff.canContent },
     { id: "gebruikers", label: "Gebruikers", show: staff.canUsers },
     { id: "audit", label: "Audit", show: staff.canAudit },
+    { id: "bezoekers", label: "Bezoekers", show: true },
     { id: "feedback", label: "Feedback", show: true },
   ].filter((tab) => tab.show);
   const tab = tabs.some((item) => item.id === search.tab) ? search.tab : "overzicht";
@@ -213,6 +215,7 @@ function BeheerApp() {
         {tab === "berichten" ? <MessagesPanel /> : null}
         {tab === "gebruikers" ? <UsersPanel actor={staff} /> : null}
         {tab === "audit" ? <AuditPanel /> : null}
+        {tab === "bezoekers" ? <VisitsPanel /> : null}
         {tab === "feedback" ? <FeedbackPanel staff={staff} /> : null}
       </div>
     </div>
@@ -771,6 +774,83 @@ function formatWhen(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat("nl-NL", { dateStyle: "medium", timeStyle: "short" }).format(date);
+}
+
+function countryName(code: string) {
+  if (!code) return "Onbekend";
+  try {
+    return new Intl.DisplayNames(["nl"], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
+}
+
+function VisitsPanel() {
+  const [stats, setStats] = useState<VisitStats | null>(null);
+  const [note, setNote] = useState("");
+  useEffect(() => {
+    void listVisits()
+      .then(setStats)
+      .catch((e: unknown) => setNote(msg(e)));
+  }, []);
+  const cards = stats
+    ? [
+        ["Vandaag", stats.peopleDay, stats.viewsDay],
+        ["7 dagen", stats.peopleWeek, stats.viewsWeek],
+        ["30 dagen", stats.peopleMonth, stats.viewsMonth],
+      ]
+    : [];
+  return (
+    <div>
+      <h2 className="font-display text-3xl text-navy">Bezoekers</h2>
+      <p className="mt-2 text-sm text-muted">
+        Unieke bezoekers en paginabezoeken. De herkomst is een land of plaats uit het IP-adres, zonder het adres zelf te tonen.
+      </p>
+      {!stats && !note ? <p className="mt-6 text-sm text-muted">Telling laden…</p> : null}
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        {cards.map(([label, people, views]) => (
+          <article key={String(label)} className="rounded-2xl bg-paper px-5 py-4 ring-1 ring-line">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
+            <p className="mt-2 font-display text-3xl text-navy">{people}</p>
+            <p className="text-sm text-muted">{views} keer bekeken</p>
+          </article>
+        ))}
+      </div>
+      {stats && stats.places.length > 0 ? (
+        <div className="mt-6 overflow-hidden rounded-2xl bg-paper ring-1 ring-line">
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs uppercase tracking-wide text-muted">
+              <tr>
+                <th className="px-4 py-3 font-semibold">Herkomst</th>
+                <th className="px-4 py-3 font-semibold">Uniek</th>
+                <th className="px-4 py-3 font-semibold">Bekeken</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.places.map((place) => (
+                <tr key={`${place.country}-${place.city}`} className="border-t border-line">
+                  <td className="px-4 py-3">{[place.city, countryName(place.country)].filter(Boolean).join(", ")}</td>
+                  <td className="px-4 py-3">{place.people}</td>
+                  <td className="px-4 py-3">{place.views}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+      {stats && stats.days.length > 0 ? (
+        <ul className="mt-6 grid gap-2">
+          {stats.days.map((day) => (
+            <li key={day.day} className="flex justify-between rounded-xl bg-paper px-4 py-2 text-sm ring-1 ring-line">
+              <span>{day.day}</span>
+              <span className="text-muted">{day.people} uniek · {day.views} keer</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <Note text={note} />
+    </div>
+  );
 }
 
 function FeedbackPanel({ staff }: { staff: Staff }) {

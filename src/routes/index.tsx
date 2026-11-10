@@ -7,12 +7,18 @@ export const Route = createFileRoute("/")({
   loader: () => getHome(),
   head: () => ({
     meta: [
-      { title: "Baptistengemeente Pernis · Leven · Groeien · Dienen · Delen" },
+      { title: "Baptistengemeente Pernis" },
       {
         name: "description",
         content:
-          "Welkom bij Baptistengemeente Pernis. Elke zondag om 10:00 uur in Gemeentecentrum De Heuvel, Ring 322.",
+          "Baptistengemeente Pernis in De Heuvel. Elke zondag om 10:00 uur. Je bent welkom, ook als je voor het eerst komt.",
       },
+      { property: "og:title", content: "Baptistengemeente Pernis" },
+      {
+        property: "og:description",
+        content: "Elke zondag om 10:00 uur in Gemeentecentrum De Heuvel. Kom binnen zoals je bent.",
+      },
+      { property: "og:image", content: "https://baptistenpernis.netlify.app/og.jpg" },
     ],
   }),
   component: Home,
@@ -55,10 +61,11 @@ function Home() {
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-10 text-center sm:py-14">
           <img src="/logo-licht.png" alt="" width={64} height={64} className="mb-4 h-16 w-16 object-contain" />
           <p className="text-xs font-semibold tracking-[0.2em] text-gold">{s.service_line}</p>
-          <h1 className="mt-3 flex flex-col gap-1 font-display text-4xl leading-none sm:text-6xl">
+          <h1 className="mt-3 font-display text-2xl text-paper sm:text-3xl">Baptistengemeente Pernis</h1>
+          <p className="mt-3 flex flex-col gap-1 font-display text-4xl leading-none sm:text-6xl">
             <span>{s.hero_title}</span>
             <span className="text-gold">{s.hero_accent}</span>
-          </h1>
+          </p>
           <p className="mt-4 max-w-xl text-lg text-paper/85">{s.hero_subtitle}</p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link to="/nieuw" className="rounded-full bg-paper px-7 py-3 font-semibold text-navy">
@@ -73,14 +80,17 @@ function Home() {
 
       <section className="bg-paper">
         <img
-          src="/fotos/sfeer-3.jpg"
+          src="/fotos/sfeer-3.webp"
           alt="De kerkzaal in Gemeentecentrum De Heuvel"
+          width={1024}
+          height={577}
+          fetchPriority="high"
           className="max-h-[28rem] w-full object-cover object-center"
         />
         <div className="mx-auto grid max-w-6xl gap-3 px-5 py-4 sm:grid-cols-3">
-          <img src="/fotos/kaarsen.jpg" alt="Kaarsen bij het glas-in-lood" className="h-36 w-full rounded-2xl object-cover" />
-          <img src="/fotos/sfeer-2.jpg" alt="Muziek tijdens de samenkomst" className="h-36 w-full rounded-2xl object-cover" />
-          <img src="/fotos/sfeer-4.jpg" alt="Bord van Baptistengemeente Pernis, De Heuvel" className="h-36 w-full rounded-2xl object-cover" />
+          <img src="/fotos/kaarsen.webp" alt="Kaarsen bij het glas-in-lood" width={980} height={552} loading="lazy" className="h-36 w-full rounded-2xl object-cover" />
+          <img src="/fotos/sfeer-2.webp" alt="Muziek tijdens de samenkomst" width={300} height={169} loading="lazy" className="h-36 w-full rounded-2xl object-cover" />
+          <img src="/fotos/sfeer-4.webp" alt="Bord van Baptistengemeente Pernis, De Heuvel" width={300} height={169} loading="lazy" className="h-36 w-full rounded-2xl object-cover" />
         </div>
       </section>
 
@@ -158,12 +168,22 @@ function Home() {
         <h2 className="mt-2 text-center font-display text-4xl text-navy">{s.theme_title}</h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-muted">{s.theme_intro}</p>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          {words.map(([word, hint]) => (
-            <div key={word} className="rounded-3xl border border-line bg-paper px-3 py-5 text-center">
-              <p className="font-display text-xl text-navy">{word}</p>
-              {hint ? <p className="mt-1 text-xs text-muted">{hint}</p> : null}
-            </div>
-          ))}
+          {words.map(([word, hint]) => {
+            const quiet = word === "…" || word === "...";
+            return (
+              <div key={word} className="rounded-3xl border border-line bg-paper px-3 py-5 text-center">
+                {quiet ? (
+                  <>
+                    <p className="font-display text-xl text-navy" aria-hidden="true">…</p>
+                    <p className="sr-only">Stilte</p>
+                  </>
+                ) : (
+                  <p className="font-display text-xl text-navy">{word}</p>
+                )}
+                {hint ? <p className="mt-1 text-xs text-muted">{hint}</p> : null}
+              </div>
+            );
+          })}
         </div>
         <p className="mt-6 text-center">
           <Link to="/seizoenen" className="font-semibold text-gold-deep">

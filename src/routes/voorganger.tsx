@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Phone } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Phone } from "lucide-react";
 import { Paragraphs, Shell } from "@/components/shell";
 import { getPastor } from "@/lib/church/public";
 
@@ -28,9 +28,9 @@ function Voorganger() {
             <Paragraphs text={pastor.bio} />
           </div>
           <div className="mt-8 flex flex-col gap-3 text-sm sm:flex-row">
-            <a className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 font-semibold text-paper" href={`mailto:${pastor.email}`}>
-              <Mail className="size-4" aria-hidden="true" /> {pastor.email}
-            </a>
+            <Link className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 font-semibold text-paper" to="/contact">
+              Stuur een bericht
+            </Link>
             <a className="inline-flex items-center gap-2 rounded-full border border-navy px-5 py-3 font-semibold text-navy" href={`tel:${pastor.phone.replace(/-/g, "")}`}>
               <Phone className="size-4" aria-hidden="true" /> {pastor.phone}
             </a>
@@ -41,7 +41,7 @@ function Voorganger() {
             <img src={pastor.photo} alt={pastor.name} className="w-full rounded-3xl object-cover" />
           ) : (
             <div className="overflow-hidden rounded-3xl bg-navy text-paper">
-              <img src="/fotos/sfeer-3.jpg" alt="Kerkzaal van De Heuvel" className="aspect-[16/10] w-full object-cover" />
+              <img src="/fotos/sfeer-3.webp" alt="Kerkzaal van De Heuvel" width={1024} height={577} loading="lazy" className="aspect-[16/10] w-full object-cover" />
               <div className="p-6">
                 <p className="text-sm font-semibold text-gold">{pastor.roleLabel}</p>
                 <p className="mt-1 font-display text-3xl">{pastor.name}</p>

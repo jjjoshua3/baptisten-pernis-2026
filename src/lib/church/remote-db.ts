@@ -6,6 +6,7 @@ import sql0002 from "../../../migrations/0002_church.sql?raw";
 import sql0003 from "../../../migrations/0003_pages.sql?raw";
 import sql0004 from "../../../migrations/0004_login.sql?raw";
 import sql0005 from "../../../migrations/0005_staff_roles.sql?raw";
+import sql0006 from "../../../migrations/0006_visits.sql?raw";
 
 type Secrets = { databaseUrl?: string; gmailAppPassword?: string };
 
@@ -60,6 +61,7 @@ async function migratePernis(pool: pg.Pool) {
       { name: "0003_pages.sql", text: sql0003 },
       { name: "0004_login.sql", text: sql0004 },
       { name: "0005_staff_roles.sql", text: sql0005 },
+      { name: "0006_visits.sql", text: sql0006 },
     ];
     for (const file of files) {
       if (applied.has(file.name)) continue;

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/gemeente")({
     return (
       <BlocksPage
         page={Route.useLoaderData()}
-        image={{ src: "/fotos/sfeer-3.jpg", alt: "Kerkzaal van Gemeentecentrum De Heuvel, met kruis en glas-in-lood" }}
+        image={{ src: "/fotos/sfeer-3.webp", alt: "Kerkzaal van Gemeentecentrum De Heuvel, met kruis en glas-in-lood" }}
       />
     );
   },

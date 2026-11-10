@@ -1,32 +1,33 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { recordVisit } from "@/lib/church/visits";
 
 const GROUPS = [
   {
-    label: "Kennismaken",
+    label: "Kom zondag",
     items: [
       { to: "/nieuw", label: "Nieuw hier?" },
-      { to: "/lid-worden", label: "Lid worden" },
       { to: "/agenda", label: "Agenda" },
+      { to: "/kinderen", label: "Kinderen" },
+      { to: "/activiteiten", label: "Activiteiten" },
     ],
   },
   {
-    label: "Gemeente",
+    label: "Over ons",
     items: [
-      { to: "/gemeente", label: "Over de gemeente" },
+      { to: "/gemeente", label: "Gemeente" },
       { to: "/voorganger", label: "Voorganger" },
       { to: "/diaconie", label: "Diaconie" },
-      { to: "/kinderen", label: "Kinderen" },
       { to: "/seizoenen", label: "Jaarthema" },
     ],
   },
   {
     label: "Praktisch",
     items: [
-      { to: "/activiteiten", label: "Activiteiten" },
       { to: "/bijdragen", label: "Bijdragen" },
       { to: "/anbi", label: "ANBI" },
+      { to: "/lid-worden", label: "Lid worden" },
       { to: "/contact", label: "Contact" },
     ],
   },
@@ -34,6 +35,11 @@ const GROUPS = [
 
 export function Shell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const path = useRouterState({ select: (state) => state.location.pathname });
+  useEffect(() => {
+    if (path.startsWith("/admin")) return;
+    void recordVisit({ data: { path } }).catch(() => undefined);
+  }, [path]);
   return (
     <div className="min-h-screen bg-cream text-ink">
       <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
@@ -45,11 +51,11 @@ export function Shell({ children }: { children: ReactNode }) {
                 <span className="block text-sm font-semibold text-gold">Pernis</span>
               </span>
             </Link>
-            <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
-              <Link to="/" className="text-ink hover:text-gold-deep">Home</Link>
+            <nav className="hidden items-center gap-1 text-sm font-medium lg:flex">
+              <Link to="/" className="px-3 py-3 text-ink hover:text-gold-deep">Home</Link>
               {GROUPS.map((group) => (
                 <div key={group.label} className="group relative">
-                  <button type="button" className="inline-flex items-center gap-1 text-ink hover:text-gold-deep">
+                  <button type="button" className="inline-flex items-center gap-1 px-3 py-3 text-ink hover:text-gold-deep">
                     {group.label}
                     <ChevronDown className="h-3.5 w-3.5" />
                   </button>
@@ -71,7 +77,7 @@ export function Shell({ children }: { children: ReactNode }) {
             </nav>
             <div className="flex items-center gap-2">
             <Link
-              to="/contact"
+              to="/nieuw"
               className="hidden rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-navy hover:bg-gold-deep hover:text-paper sm:inline-flex"
             >
               Kom deze zondag
@@ -98,7 +104,7 @@ export function Shell({ children }: { children: ReactNode }) {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className="block rounded-xl px-3 py-2.5 text-base font-medium hover:bg-cream"
+                    className="block rounded-xl px-3 py-3 text-base font-medium hover:bg-cream"
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
@@ -107,7 +113,7 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             ))}
             <Link
-              to="/contact"
+              to="/nieuw"
               className="mt-2 rounded-full bg-gold px-4 py-3 text-center font-semibold text-navy"
               onClick={() => setOpen(false)}
             >
@@ -126,27 +132,27 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="text-sm">
             <p className="font-semibold text-paper">Adres</p>
             <p className="mt-2">Gemeentecentrum De Heuvel<br />Ring 322<br />3195 XS Pernis</p>
-            <a className="mt-2 inline-block text-gold" href="mailto:info@baptistenpernis.nl">
-              info@baptistenpernis.nl
-            </a>
+            <Link to="/contact" className="mt-2 inline-flex py-2 text-gold">
+              Stuur een bericht
+            </Link>
           </div>
           <div className="text-sm">
             <p className="font-semibold text-paper">Ontdek</p>
             <ul className="mt-2 space-y-1">
-              <li><Link to="/nieuw" className="hover:text-gold">Nieuw hier?</Link></li>
-              <li><Link to="/diaconie" className="hover:text-gold">Diaconie</Link></li>
-              <li><Link to="/seizoenen" className="hover:text-gold">Jaarthema</Link></li>
-              <li><Link to="/lid-worden" className="hover:text-gold">Lid worden</Link></li>
+              <li><Link to="/nieuw" className="inline-flex py-2 hover:text-gold">Nieuw hier?</Link></li>
+              <li><Link to="/diaconie" className="inline-flex py-2 hover:text-gold">Diaconie</Link></li>
+              <li><Link to="/seizoenen" className="inline-flex py-2 hover:text-gold">Jaarthema</Link></li>
+              <li><Link to="/lid-worden" className="inline-flex py-2 hover:text-gold">Lid worden</Link></li>
             </ul>
           </div>
           <div className="text-sm">
             <p className="font-semibold text-paper">Praktisch</p>
             <ul className="mt-2 space-y-1">
-              <li><Link to="/bijdragen" className="hover:text-gold">Bijdragen</Link></li>
-              <li><Link to="/anbi" className="hover:text-gold">ANBI</Link></li>
-              <li><Link to="/agenda" className="hover:text-gold">Agenda</Link></li>
+              <li><Link to="/bijdragen" className="inline-flex py-2 hover:text-gold">Bijdragen</Link></li>
+              <li><Link to="/anbi" className="inline-flex py-2 hover:text-gold">ANBI</Link></li>
+              <li><Link to="/agenda" className="inline-flex py-2 hover:text-gold">Agenda</Link></li>
               <li>
-                <a className="hover:text-gold" href="https://www.youtube.com/@baptistengemeentepernis2194/streams">
+                <a className="inline-flex py-2 hover:text-gold" href="https://www.youtube.com/@baptistengemeentepernis2194/streams">
                   Diensten op YouTube
                 </a>
               </li>
@@ -157,8 +163,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <p className="border-t border-paper/15 py-4 text-center text-xs">
           © 2026 Baptistengemeente Pernis
           {" · Ontworpen door "}
-          <a className="text-gold underline" href="https://jjjoshua3.netlify.app/">Joshua</a>{". Beveiligingslek melden? Dat kan via: "}
-          <a className="text-gold underline" href="mailto:aa0271n8@gmail.com">aa0271n8@gmail.com</a>
+          <a className="text-gold underline" href="https://jjjoshua3.netlify.app/">Joshua</a>
         </p>
       </footer>
     </div>
