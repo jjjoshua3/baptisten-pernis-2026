@@ -39,12 +39,6 @@ export const Route = createRootRoute({
   component: () => (
     <html lang="nl" suppressHydrationWarning>
       <head>
-        <style
-          dangerouslySetInnerHTML={{
-            __html:
-              "html{background:#1e3a5f}body{margin:0;background:#1e3a5f;opacity:0}img{max-width:100%;height:auto}",
-          }}
-        />
         <HeadContent />
       </head>
       <body>
