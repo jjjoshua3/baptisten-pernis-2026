@@ -1,21 +1,35 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
-const LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/nieuw", label: "Nieuw?" },
-  { to: "/gemeente", label: "Gemeente" },
-  { to: "/voorganger", label: "Voorganger" },
-  { to: "/diaconie", label: "Diaconie" },
-  { to: "/activiteiten", label: "Activiteiten" },
-  { to: "/agenda", label: "Agenda" },
-  { to: "/kinderen", label: "Kinderen" },
-  { to: "/bijdragen", label: "Bijdragen" },
-  { to: "/lid-worden", label: "Lid worden" },
-  { to: "/anbi", label: "ANBI" },
-  { to: "/seizoenen", label: "Jaarthema" },
-  { to: "/contact", label: "Contact" },
+const GROUPS = [
+  {
+    label: "Kennismaken",
+    items: [
+      { to: "/nieuw", label: "Nieuw hier?" },
+      { to: "/lid-worden", label: "Lid worden" },
+      { to: "/agenda", label: "Agenda" },
+    ],
+  },
+  {
+    label: "Gemeente",
+    items: [
+      { to: "/gemeente", label: "Over de gemeente" },
+      { to: "/voorganger", label: "Voorganger" },
+      { to: "/diaconie", label: "Diaconie" },
+      { to: "/kinderen", label: "Kinderen" },
+      { to: "/seizoenen", label: "Jaarthema" },
+    ],
+  },
+  {
+    label: "Praktisch",
+    items: [
+      { to: "/activiteiten", label: "Activiteiten" },
+      { to: "/bijdragen", label: "Bijdragen" },
+      { to: "/anbi", label: "ANBI" },
+      { to: "/contact", label: "Contact" },
+    ],
+  },
 ] as const;
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -23,15 +37,39 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-cream text-ink">
       <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col px-5">
-          <div className="flex h-16 items-center justify-between gap-4">
-            <Link to="/" className="flex items-center gap-3">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
+          <Link to="/" className="flex items-center gap-3">
               <img src="/logo.png" alt="" className="h-11 w-11 rounded-2xl bg-white object-contain p-1" />
               <span className="leading-tight">
                 <span className="block text-base font-semibold tracking-tight text-navy">Baptistengemeente</span>
                 <span className="block text-sm font-semibold text-gold">Pernis</span>
               </span>
             </Link>
+            <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
+              <Link to="/" className="text-ink hover:text-gold-deep">Home</Link>
+              {GROUPS.map((group) => (
+                <div key={group.label} className="group relative">
+                  <button type="button" className="inline-flex items-center gap-1 text-ink hover:text-gold-deep">
+                    {group.label}
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                  <div className="invisible absolute left-0 top-full z-50 min-w-52 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="rounded-2xl border border-line bg-paper p-2 shadow-lg">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          className="block rounded-xl px-3 py-2 text-ink hover:bg-cream hover:text-gold-deep"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </nav>
+            <div className="flex items-center gap-2">
             <Link
               to="/contact"
               className="hidden rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-navy hover:bg-gold-deep hover:text-paper sm:inline-flex"
@@ -46,26 +84,27 @@ export function Shell({ children }: { children: ReactNode }) {
             >
               {open ? <X /> : <Menu />}
             </button>
-          </div>
-          <nav className="hidden flex-wrap gap-x-4 gap-y-1 pb-3 text-sm font-medium lg:flex">
-            {LINKS.map((item) => (
-              <Link key={item.to} to={item.to} className="text-ink hover:text-gold-deep">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            </div>
         </div>
         {open ? (
-          <nav className="flex flex-col gap-1 border-t border-line px-5 py-4 lg:hidden">
-            {LINKS.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="rounded-xl px-3 py-3 text-base font-medium hover:bg-cream"
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-              </Link>
+          <nav className="flex flex-col gap-2 border-t border-line px-5 py-4 lg:hidden">
+            <Link to="/" className="rounded-xl px-3 py-3 text-base font-medium hover:bg-cream" onClick={() => setOpen(false)}>
+              Home
+            </Link>
+            {GROUPS.map((group) => (
+              <div key={group.label}>
+                <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">{group.label}</p>
+                {group.items.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className="block rounded-xl px-3 py-2.5 text-base font-medium hover:bg-cream"
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             ))}
             <Link
               to="/contact"

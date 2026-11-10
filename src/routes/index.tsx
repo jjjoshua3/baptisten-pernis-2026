@@ -52,15 +52,15 @@ function Home() {
         </div>
       ) : null}
       <section className="bg-navy text-paper">
-        <div className="mx-auto flex min-h-[70vh] max-w-6xl flex-col items-center justify-center px-5 py-20 text-center">
-          <img src="/logo-licht.png" alt="" className="mb-8 h-24 w-24 object-contain" />
+        <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-10 text-center sm:py-14">
+          <img src="/logo-licht.png" alt="" className="mb-4 h-16 w-16 object-contain" />
           <p className="text-xs font-semibold tracking-[0.2em] text-gold">{s.service_line}</p>
-          <h1 className="mt-6 flex flex-col gap-3 font-display text-5xl leading-none sm:text-7xl">
+          <h1 className="mt-3 flex flex-col gap-1 font-display text-4xl leading-none sm:text-6xl">
             <span>{s.hero_title}</span>
             <span className="text-gold">{s.hero_accent}</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-paper/85">{s.hero_subtitle}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <p className="mt-4 max-w-xl text-lg text-paper/85">{s.hero_subtitle}</p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link to="/nieuw" className="rounded-full bg-paper px-7 py-3 font-semibold text-navy">
               Nieuw hier?
             </Link>
