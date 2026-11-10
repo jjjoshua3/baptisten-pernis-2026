@@ -53,7 +53,7 @@ function Home() {
       ) : null}
       <section className="bg-navy text-paper">
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-10 text-center sm:py-14">
-          <img src="/logo-licht.png" alt="" className="mb-4 h-16 w-16 object-contain" />
+          <img src="/logo-licht.png" alt="" width={64} height={64} className="mb-4 h-16 w-16 object-contain" />
           <p className="text-xs font-semibold tracking-[0.2em] text-gold">{s.service_line}</p>
           <h1 className="mt-3 flex flex-col gap-1 font-display text-4xl leading-none sm:text-6xl">
             <span>{s.hero_title}</span>

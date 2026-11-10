@@ -103,7 +103,6 @@ function BeheerApp() {
   const navigate = Route.useNavigate();
   const [staff, setStaff] = useState<Staff | null | undefined>(undefined);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState("");
 
   useEffect(() => {
     void enterBeheer()
@@ -151,17 +150,47 @@ function BeheerApp() {
   const tab = tabs.some((item) => item.id === search.tab) ? search.tab : "overzicht";
 
   return (
-    <div className="min-h-screen bg-cream">
-      <header className="border-b border-line bg-navy text-paper">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4">
+    <div className="min-h-screen bg-cream lg:grid lg:grid-cols-[15rem_1fr]">
+      <aside className="bg-navy text-paper lg:min-h-screen">
+        <div className="flex items-center justify-between gap-3 px-5 py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold">Beheer</p>
-            <p className="font-display text-2xl">{staff.displayName}</p>
-            <p className="text-sm text-paper/70">{staff.role} · {staff.email}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">Beheer</p>
+            <p className="font-display text-2xl leading-tight">{staff.displayName}</p>
+            <p className="text-sm text-paper/70">{staff.role}</p>
           </div>
           <button
             type="button"
-            className="rounded-full border border-paper/40 px-4 py-2 text-sm font-semibold"
+            className="rounded-full border border-paper/30 px-3 py-2 text-sm lg:hidden"
+            onClick={() => {
+              const token = sessionStorage.getItem("pernis_session") ?? "";
+              sessionStorage.removeItem("pernis_session");
+              void logoutChurch({ data: { token } }).finally(() => {
+                window.location.href = "/admin";
+              });
+            }}
+          >
+            Uit
+          </button>
+        </div>
+        <nav className="flex gap-2 overflow-x-auto px-3 pb-4 lg:flex-col">
+          {tabs.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={
+                "shrink-0 rounded-xl px-3 py-2 text-left text-sm font-semibold " +
+                (tab === item.id ? "bg-gold text-navy" : "text-paper/80 hover:bg-white/10")
+              }
+              onClick={() => void navigate({ search: { tab: item.id, magic: "" } })}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="hidden gap-2 px-3 pb-6 lg:grid">
+          <button
+            type="button"
+            className="rounded-xl border border-paper/30 px-3 py-2 text-sm font-semibold"
             onClick={() => {
               const token = sessionStorage.getItem("pernis_session") ?? "";
               sessionStorage.removeItem("pernis_session");
@@ -172,35 +201,9 @@ function BeheerApp() {
           >
             Uitloggen
           </button>
-          <button
-            type="button"
-            className="rounded-full border border-gold px-4 py-2 text-sm font-semibold text-gold"
-            onClick={() => {
-              const link = `${window.location.origin}/admin`;
-              void navigator.clipboard.writeText(link).then(() => setCopied("Inloglink gekopieerd."));
-            }}
-          >
-            Kopieer inloglink
-          </button>
-          {copied ? <p className="w-full text-sm text-gold">{copied}</p> : null}
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 pb-4">
-          {tabs.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={
-                "shrink-0 rounded-full px-4 py-2 text-sm font-semibold " +
-                (tab === item.id ? "bg-gold text-navy" : "bg-navy-deep text-paper")
-              }
-              onClick={() => void navigate({ search: { tab: item.id, magic: "" } })}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
-      </header>
-      <div className="mx-auto max-w-6xl px-5 py-8">
+      </aside>
+      <div className="mx-auto w-full max-w-4xl px-5 py-8">
         {tab === "overzicht" ? <SettingsPanel canEdit={staff.canContent} /> : null}
         {tab === "agenda" ? <AgendaPanel /> : null}
         {tab === "activiteiten" ? <ActivitiesPanel /> : null}
@@ -727,26 +730,47 @@ function PendingGrant({
 function AuditPanel() {
   const [rows, setRows] = useState<{ id: number; actor_name: string; action: string; target: string; detail: string; created_at: string }[]>([]);
   const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    void listAudit().then(setRows).catch((e: unknown) => setNote(msg(e)));
+    void listAudit()
+      .then((result) => setRows(Array.isArray(result) ? result : []))
+      .catch((e: unknown) => setNote(msg(e)))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <div>
       <h2 className="font-display text-3xl text-navy">Audit</h2>
-      <p className="mt-2 text-sm text-muted">Wie heeft wat gewijzigd. Alleen zichtbaar met auditrecht, of als eigenaar.</p>
-      <ul className="mt-4 divide-y divide-line overflow-hidden rounded-3xl bg-paper ring-1 ring-line">
+      <p className="mt-2 text-sm text-muted">Wie heeft wat gewijzigd.</p>
+      {loading ? <p className="mt-6 text-sm text-muted">Log laden…</p> : null}
+      {!loading && rows.length === 0 ? (
+        <p className="mt-6 rounded-2xl bg-paper px-5 py-8 text-sm text-muted ring-1 ring-line">
+          Nog geen wijzigingen in het log.
+        </p>
+      ) : null}
+      <ol className="mt-6 grid gap-3">
         {rows.map((row) => (
-          <li key={row.id} className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-4">
-            <span className="font-semibold text-navy">{row.actor_name}</span>
-            <span>{row.action} · {row.target}</span>
-            <span className="text-muted">{row.detail}</span>
-            <span className="text-xs text-muted">{row.created_at}</span>
+          <li key={row.id} className="rounded-2xl bg-paper px-5 py-4 ring-1 ring-line">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p className="font-semibold text-navy">{row.actor_name}</p>
+              <time className="text-xs text-muted">{formatWhen(row.created_at)}</time>
+            </div>
+            <p className="mt-1 text-sm">
+              <span className="font-medium text-gold-deep">{row.action}</span>
+              <span className="text-muted"> · {row.target}</span>
+            </p>
+            {row.detail ? <p className="mt-1 text-sm text-ink">{row.detail}</p> : null}
           </li>
         ))}
-      </ul>
+      </ol>
       <Note text={note} />
     </div>
   );
+}
+
+function formatWhen(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("nl-NL", { dateStyle: "medium", timeStyle: "short" }).format(date);
 }
 
 function FeedbackPanel({ staff }: { staff: Staff }) {

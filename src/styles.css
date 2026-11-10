@@ -39,3 +39,7 @@
     outline-offset: 2px;
   }
 }
+
+body {
+  opacity: 1;
+}

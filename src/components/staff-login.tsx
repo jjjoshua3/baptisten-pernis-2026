@@ -41,7 +41,7 @@ export function StaffLogin({ title = "Beheer", magic = "" }: { title?: string; m
       <div className="absolute inset-0 bg-gradient-to-br from-navy/80 via-navy/55 to-navy/75" />
       <div className="relative grid min-h-screen place-items-center px-5 py-16">
       <div className="w-full max-w-md rounded-3xl border border-white/30 bg-paper/95 p-8 shadow-2xl backdrop-blur-md">
-        <img src="/logo.png" alt="" className="h-14 w-14 rounded-2xl bg-white object-contain p-1" />
+        <img src="/logo.png" alt="" width={56} height={56} className="h-14 w-14 rounded-2xl bg-white object-contain p-1" />
         <h1 className="mt-5 font-display text-3xl text-navy">{title}</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Vul het e-mailadres in dat de beheerder heeft toegevoegd. Je krijgt een link die dertig minuten

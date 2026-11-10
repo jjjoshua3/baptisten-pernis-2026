@@ -17,9 +17,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#1e3a5f" },
     ],
     links: [
-      { rel: "icon", type: "image/png", href: "/logo.png" },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "apple-touch-icon", href: "/logo.png" },
       { rel: "stylesheet", href: appCss },
       {
         rel: "stylesheet",
@@ -31,6 +29,12 @@ export const Route = createRootRoute({
   component: () => (
     <html lang="nl" suppressHydrationWarning>
       <head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html:
+              "html{background:#1e3a5f}body{margin:0;background:#1e3a5f;opacity:0}img{max-width:100%;height:auto}",
+          }}
+        />
         <HeadContent />
       </head>
       <body>

@@ -547,7 +547,7 @@ export const removeStaff = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-export const listAudit = createServerFn({ method: "GET" })
+export const listAudit = createServerFn({ method: "POST" })
   .middleware([churchSessionMiddleware])
   .handler(async ({ context }) => {
     const { sql } = await guard(context.userId, "audit");

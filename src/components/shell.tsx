@@ -39,7 +39,7 @@ export function Shell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
           <Link to="/" className="flex items-center gap-3">
-              <img src="/logo.png" alt="" className="h-11 w-11 rounded-2xl bg-white object-contain p-1" />
+              <img src="/logo.png" alt="" width={44} height={44} className="h-11 w-11 rounded-2xl bg-white object-contain p-1" />
               <span className="leading-tight">
                 <span className="block text-base font-semibold tracking-tight text-navy">Baptistengemeente</span>
                 <span className="block text-sm font-semibold text-gold">Pernis</span>
